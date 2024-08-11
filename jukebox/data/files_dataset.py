@@ -47,6 +47,7 @@ class FilesAudioDataset(Dataset):
             self.labeller = Labeller(hps.max_bow_genre_size, hps.n_tokens, self.sample_length, v3=hps.labels_v3)
 
     def get_index_offset(self, item):
+        print(type(item))
         # For a given dataset item and shift, return song index and offset within song
         half_interval = self.sample_length//2
         shift = np.random.randint(-half_interval, half_interval) if self.aug_shift else 0
