@@ -58,7 +58,7 @@ def setup_dist_from_mpi(
 
 def _setup_dist_from_mpi(master_addr, backend, port, n_attempts, verbose):
     from mpi4py import MPI  # This must be imported in order to get e   rrors from all ranks to show up
-
+    print("Ci sono")
     mpi_rank = MPI.COMM_WORLD.Get_rank()
     mpi_size = MPI.COMM_WORLD.Get_size()
 
@@ -84,6 +84,7 @@ def _setup_dist_from_mpi(master_addr, backend, port, n_attempts, verbose):
     for attempt_idx in range(n_attempts):
         try:
             dist.init_process_group(backend=backend, init_method=f"env://")
+            print(f"Initialized NCCL on rank {mpi_rank}")
             assert dist.get_rank() == mpi_rank
 
             use_cuda = torch.cuda.is_available()
