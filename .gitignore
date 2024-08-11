@@ -136,3 +136,7 @@ logs/
 script/results
 script/checkpoints
 .idea/
+
+babyslakh_16k/
+*.gz
+*.dur

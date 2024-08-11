@@ -76,3 +76,17 @@ class DataProcessor():
         print_all(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
         print_all(f'Train sampler: {self.train_sampler}')
         print_all(f'Train loader: {len(self.train_loader)}')
+
+if __name__=="__main__":
+    from jukebox.data.data_processor import DataProcessor
+    from jukebox.make_models import make_vqvae, make_prior, MODELS, make_model
+    from jukebox.hparams import Hyperparams, setup_hparams
+    import math
+    hps = "vqvae"
+    hps = setup_hparams(hps, dict(sample_length=1048576))
+    hps.audio_files_dir="/content/babyslakh_16k"
+    hps.channels=2
+    hps.sample_length=1048576
+    hps.min_duration = math.ceil(hps.sample_length / hps.sr)
+    hps.max_duration = math.inf
+    data_processor = DataProcessor(hps)
