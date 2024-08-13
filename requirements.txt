@@ -7,4 +7,3 @@ librosa>=0.7.2
 mpi4py>=3.0.0
 museval
 matplotlib
-av
