@@ -6,7 +6,7 @@ Test on dummy outputs to see if everything matches
 import os
 import numpy as np
 import torch as t
-import jukebox.utils.dist_adapter as dist
+# import jukebox.utils.dist_adapter as dist
 from jukebox.hparams import Hyperparams, setup_hparams, REMOTE_PREFIX
 from jukebox.utils.remote_utils import download
 from jukebox.utils.torch_utils import freeze_model
@@ -24,17 +24,17 @@ MODELS = {
 
 def load_checkpoint(path):
     restore = path
-    if restore.startswith(REMOTE_PREFIX):
-        remote_path = restore
-        local_path = os.path.join(os.path.expanduser("~/.cache"), remote_path[len(REMOTE_PREFIX):])
-        if dist.get_rank() % 8 == 0:
-            print("Downloading from azure")
-            if not os.path.exists(os.path.dirname(local_path)):
-                os.makedirs(os.path.dirname(local_path))
-            if not os.path.exists(local_path):
-                download(remote_path, local_path)
-        restore = local_path
-    dist.barrier()
+    # if restore.startswith(REMOTE_PREFIX):
+    #     remote_path = restore
+    #     local_path = os.path.join(os.path.expanduser("~/.cache"), remote_path[len(REMOTE_PREFIX):])
+    #     if dist.get_rank() % 8 == 0:
+    #         print("Downloading from azure")
+    #         if not os.path.exists(os.path.dirname(local_path)):
+    #             os.makedirs(os.path.dirname(local_path))
+    #         if not os.path.exists(local_path):
+    #             download(remote_path, local_path)
+    #     restore = local_path
+    # dist.barrier()
     checkpoint = t.load(restore, map_location=t.device('cpu'))
     print("Restored from {}".format(restore))
     return checkpoint
