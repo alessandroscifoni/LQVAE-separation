@@ -73,9 +73,12 @@ class DataProcessor():
                                       drop_last=False, collate_fn=collate_fn)
 
     def print_stats(self, hps):
-        print_all(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
-        print_all(f'Train sampler: {self.train_sampler}')
-        print_all(f'Train loader: {len(self.train_loader)}')
+        # print_all(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
+        # print_all(f'Train sampler: {self.train_sampler}')
+        # print_all(f'Train loader: {len(self.train_loader)}')
+        print(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
+        print(f'Train sampler: {self.train_sampler}')
+        print(f'Train loader: {len(self.train_loader)}')
 
 if __name__=="__main__":
     from jukebox.data.data_processor import DataProcessor

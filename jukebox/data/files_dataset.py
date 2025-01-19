@@ -29,8 +29,10 @@ class FilesAudioDataset(Dataset):
             if durations[i] / self.sr >= self.max_duration:
                 continue
             keep.append(i)
-        print_all(f'self.sr={self.sr}, min: {self.min_duration}, max: {self.max_duration}')
-        print_all(f"Keeping {len(keep)} of {len(files)} files")
+        # print_all(f'self.sr={self.sr}, min: {self.min_duration}, max: {self.max_duration}')
+        # print_all(f"Keeping {len(keep)} of {len(files)} files")
+        print(f'self.sr={self.sr}, min: {self.min_duration}, max: {self.max_duration}')
+        print(f"Keeping {len(keep)} of {len(files)} files")
         self.files = [files[i] for i in keep]
         self.durations = [int(durations[i]) for i in keep]
         self.cumsum = np.cumsum(self.durations)
@@ -38,7 +40,8 @@ class FilesAudioDataset(Dataset):
     def init_dataset(self, hps):
         # Load list of files and starts/durations
         files = librosa.util.find_files(f'{hps.audio_files_dir}', ext=['mp3', 'opus', 'm4a', 'aac', 'wav'])
-        print_all(f"Found {len(files)} files. Getting durations")
+        # print_all(f"Found {len(files)} files. Getting durations")
+        print(f"Found {len(files)} files. Getting durations")
         cache = dist.get_rank() % 8 == 0 if dist.is_available() else True
         durations = np.array([get_duration_sec(file, cache=cache) * self.sr for file in files])  # Could be approximate
         self.filter(files, durations)

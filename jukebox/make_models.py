@@ -96,17 +96,20 @@ def make_vqvae(hps, device='cuda'):
     vqvae = vqvae.to(device)
     restore_model(hps, vqvae, hps.restore_vqvae)
     if hps.train and not hps.prior:
-        print_all(f"Loading vqvae in train mode")
+        # print_all(f"Loading vqvae in train mode")
+        print(f"Loading vqvae in train mode")
         if hps.restore_vqvae != '':
-            print_all("Reseting bottleneck emas")
+            # print_all("Reseting bottleneck emas")
+            print("Reseting bottleneck emas")
             for level, bottleneck in enumerate(vqvae.bottleneck.level_blocks):
                 num_samples = hps.sample_length
                 downsamples = calculate_strides(hps.strides_t, hps.downs_t)
                 raw_to_tokens = np.prod(downsamples[:level + 1])
-                num_tokens = (num_samples // raw_to_tokens) * dist.get_world_size()
+                num_tokens = (num_samples // raw_to_tokens) # * dist.get_world_size()
                 bottleneck.restore_k(num_tokens=num_tokens, threshold=hps.revival_threshold)
     else:
-        print_all(f"Loading vqvae in eval mode")
+        # print_all(f"Loading vqvae in eval mode")
+        print(f"Loading vqvae in eval mode")
         vqvae.eval()
         freeze_model(vqvae)
     return vqvae
@@ -175,16 +178,20 @@ def make_prior(hps, vqvae, device='cuda'):
     prior.alignment_layer = hps.get('alignment_layer', None)
 
     if hps.fp16_params:
-        print_all("Converting to fp16 params")
+        # print_all("Converting to fp16 params")
+        print("Converting to fp16 params")
+
         from jukebox.transformer.ops import _convert_conv_weights_to_fp16
         prior.apply(_convert_conv_weights_to_fp16)
     prior = prior.to(device)
     restore_model(hps, prior, hps.restore_prior)
     if hps.train:
-        print_all(f"Loading prior in train mode")
+        # print_all(f"Loading prior in train mode")
+        print(f"Loading prior in train mode")
         pass
     else:
-        print_all(f"Loading prior in eval mode")
+        # print_all(f"Loading prior in eval mode")
+        print(f"Loading prior in eval mode")
         prior.eval()
         freeze_model(prior)
     return prior
@@ -240,7 +247,7 @@ def save_outputs(model, device, hps):
         data[level] = dict(x=x_in, y=y_in, x_out=x_out, preds=preds)
         prior.cpu()
     t.save(data, 'data.pth.tar')
-    dist.barrier()
+    # dist.barrier()
     print("Saved data")
     exit()
 
