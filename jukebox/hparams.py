@@ -13,14 +13,17 @@ def setup_hparams(hparam_set_names, kwargs):
     if not isinstance(hparam_set_names, tuple):
         hparam_set_names = hparam_set_names.split(",")
     hparam_sets = [HPARAMS_REGISTRY[x.strip()] for x in hparam_set_names if x] + [kwargs]
+    print(f"Using hparam sets: {hparam_sets}")
     for k, v in DEFAULTS.items():
         H.update(v)
+    print(f"Using defaults: {DEFAULTS}")
     for hps in hparam_sets:
         for k in hps:
             if k not in H:
                 raise ValueError(f"{k} not in default args")
         H.update(**hps)
     H.update(**kwargs)
+    print(f"Using hparams: {H}")
     return H
 
 # Teeny for testing
