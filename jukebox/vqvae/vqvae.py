@@ -48,7 +48,7 @@ class VQVAE(nn.Module):
         self.sample_length = input_shape[0]
         x_shape, x_channels = input_shape[:-1], input_shape[-1]
         self.x_shape = x_shape
-
+        self.channels = x_channels
         self.downsamples = calculate_strides(strides_t, downs_t)
         self.hop_lengths = np.cumprod(self.downsamples)
         self.z_shapes = z_shapes = [(x_shape[0] // self.hop_lengths[level],) for level in range(levels)]
@@ -102,6 +102,7 @@ class VQVAE(nn.Module):
         # Use only lowest level
         decoder, x_quantised = self.decoders[start_level], xs[0:1]
         x_out = decoder(x_quantised, all_levels=False)
+        
         x_out = self.postprocess(x_out)
         return x_out
 
@@ -138,6 +139,7 @@ class VQVAE(nn.Module):
         for level in range(self.levels):
             encoder = self.encoders[level]
             x_out = encoder(x_in)
+            print(f"Encoder output shape at level {level}: {x_out[-1].shape}")  # Print the shape
             xs.append(x_out[-1])
         return xs
 
@@ -188,6 +190,7 @@ class VQVAE(nn.Module):
         for level in range(self.levels):
             decoder = self.decoders[level]
             x_out = decoder(xs_quantised[level:level+1], all_levels=False)
+            print(f"Decoder output shape at level {level}: {x_out.shape}")  # Print the shape
             assert_shape(x_out, x_in.shape)
             x_outs.append(x_out)
 
