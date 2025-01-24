@@ -17,7 +17,7 @@ class EncoderConvBlock(nn.Module):
                     nn.Conv1d(input_emb_width if i == 0 else width, width, filter_t, stride_t, pad_t),
                     Resnet1D(width, depth, m_conv, dilation_growth_rate, dilation_cycle, zero_out, res_scale),
                 )
-                self.blocks.append(block)
+                blocks.append(block)
             block = nn.Conv1d(width, output_emb_width, 3, 1, 1)
             blocks.append(block)
         self.model = nn.Sequential(*blocks)
