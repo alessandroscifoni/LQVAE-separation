@@ -9,7 +9,7 @@ class EncoderConvBlock(nn.Module):
                  dilation_growth_rate=1, dilation_cycle=None, zero_out=False,
                  res_scale=False):
         super().__init__()
-        self.blocks = []
+        blocks = []
         filter_t, pad_t = stride_t * 2, stride_t // 2
         if down_t > 0:
             for i in range(down_t):
@@ -19,15 +19,18 @@ class EncoderConvBlock(nn.Module):
                 )
                 self.blocks.append(block)
             block = nn.Conv1d(width, output_emb_width, 3, 1, 1)
-            self.blocks.append(block)
-        # self.model = nn.Sequential(*blocks)
+            blocks.append(block)
+        self.model = nn.Sequential(*blocks)
 
     def forward(self, x):
-        for i, block in enumerate(self.blocks):
-            x = block(x)
-            print(f"blocco {i} shape: {x.shape}")
-        # return self.model(x)
-        return x
+        # for i, block in enumerate(self.blocks):
+
+        #     x = block(x)
+        #     print(f"blocco {i} shape: {x.shape}")
+        print(f"input EncoderConvBlock shape: {x.shape}")
+        out = self.model(x)
+        print(f"output EncoderConvBlock shape: {out.shape}")
+        return out
 
 class DecoderConvBock(nn.Module):
     def __init__(self, input_emb_width, output_emb_width, down_t,
