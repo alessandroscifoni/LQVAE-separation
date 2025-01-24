@@ -82,9 +82,13 @@ class Encoder(nn.Module):
 
         # 64, 32, ...
         iterator = zip(list(range(self.levels)), self.downs_t, self.strides_t)
+        print(f"start Encoder")
         for level, down_t, stride_t in iterator:
             level_block = self.level_blocks[level]
+            print(f"level: {level}, down_t: {down_t}, stride_t: {stride_t}")
+            print(f"input Encoder shape: {x.shape}")
             x = level_block(x)
+            print(f"output Encoder shape: {x.shape}")
             emb, T = self.output_emb_width, T // (stride_t ** down_t)
             assert_shape(x, (N, emb, T))
             xs.append(x)
