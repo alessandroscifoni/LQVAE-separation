@@ -72,6 +72,7 @@ class Encoder(nn.Module):
         self.level_blocks = nn.ModuleList()
         iterator = zip(list(range(self.levels)), downs_t, strides_t)
         for level, down_t, stride_t in iterator:
+            print(f"level EncoderBlock: {level}, down_t: {down_t}, stride_t: {stride_t}")
             self.level_blocks.append(level_block(level, down_t, stride_t))
 
     def forward(self, x):

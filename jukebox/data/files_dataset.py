@@ -24,6 +24,7 @@ class FilesAudioDataset(Dataset):
         # Remove files too short or too long
         keep = []
         for i in range(len(files)):
+            print(f"Duration {durations[i] / self.sr:.2f} for {files[i]}")
             if durations[i] / self.sr < self.min_duration:
                 continue
             if durations[i] / self.sr >= self.max_duration:
