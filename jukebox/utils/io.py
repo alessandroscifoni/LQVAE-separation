@@ -49,7 +49,6 @@ def load_audio(file, sr, offset, duration, resample=True, approx=False, time_bas
             frame = resampler.resample(frame)[0]
         print("Frame type ", type(frame))   
         
-        print("Frame shape", frame.shape)
         print("Frame ", frame)
         frame = av.audio.frame.AudioFrame.from_ndarray(frame, format='fltp', layout='stereo')
         read = frame.shape[-1]
