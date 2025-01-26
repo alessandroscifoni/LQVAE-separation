@@ -51,7 +51,7 @@ def load_audio(file, sr, offset, duration, resample=True, approx=False, time_bas
         
         
         print("Frame ", frame)
-        frame = frame.to_ndarray(dict(format='fltp')) # Convert to floats and not int16
+        frame = frame.to_ndarray() # Convert to floats and not int16
         read = frame.shape[-1]
         if total_read + read > duration:
             read = duration - total_read
