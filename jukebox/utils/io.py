@@ -46,7 +46,7 @@ def load_audio(file, sr, offset, duration, resample=True, approx=False, time_bas
             frame.pts = None
             print("RESAMPLEEEEEEEEEEEEEEEEEEEE")
             print("lunghezzaaaa ", len(resampler.resample(frame)))
-            frame = resampler.resample(frame)
+            frame = resampler.resample(frame)[0]
         print("Frame type ", type(frame))   
         
         
