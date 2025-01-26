@@ -45,12 +45,13 @@ def load_audio(file, sr, offset, duration, resample=True, approx=False, time_bas
         if resample:
             frame.pts = None
             print("RESAMPLEEEEEEEEEEEEEEEEEEEE")
+            print("lunghezzaaaa ", len(resampler.resample(frame)))
             frame = resampler.resample(frame)[0]
         print("Frame type ", type(frame))   
         
         print("Frame shape", frame.shape)
         print("Frame ", frame)
-        frame = frame.to_ndarray(format='fltp') # Convert to floats and not int16
+        frame = av.audio.frame.AudioFrame.from_ndarray(frame, format='fltp', layout='stereo')
         read = frame.shape[-1]
         if total_read + read > duration:
             read = duration - total_read
