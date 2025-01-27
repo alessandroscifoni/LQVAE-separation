@@ -37,6 +37,7 @@ class FilesAudioDataset(Dataset):
         self.files = [files[i] for i in keep]
         self.durations = [int(durations[i]) for i in keep]
         self.cumsum = np.cumsum(self.durations)
+        print(f"len dataset {int(np.floor(self.cumsum[-1] / self.sample_length))}")
 
     def init_dataset(self, hps):
         # Load list of files and starts/durations
@@ -97,8 +98,6 @@ class FilesAudioDataset(Dataset):
         return self.get_song_chunk(index, offset, test)
 
     def __len__(self):
-        print(f"CUMSUM {self.cumsum}")
-        print(len(self.cumsum))
         return int(np.floor(self.cumsum[-1] / self.sample_length))
 
     def __getitem__(self, item):
