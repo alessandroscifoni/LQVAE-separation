@@ -1,8 +1,9 @@
 import random
+import torch as t
 from torch.utils.data import DataLoader, random_split
 from jukebox.data.my_files_dataset import FilesAudioDataset
 class DataProcessor:
-    def __init__(self, train_dir, test_dir, sample_rate=16000, batch_size=16, min_duration=1.0, max_duration=float('inf')):
+    def __init__(self, train_dir, test_dir, labels=False, sample_rate=16000, batch_size=16, min_duration=1.0, max_duration=float('inf')):
         """
         Args:
             train_dir (str): Path to the training dataset directory.
@@ -25,9 +26,13 @@ class DataProcessor:
         # print(f"training dataset len len {self.train_dataset}")
         # Create DataLoaders
         self.batch_size = batch_size
-        self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
-        self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
-        self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+        if labels:
+            collate_fn = lambda batch: tuple(t.stack([t.from_numpy(b[i]) for b in batch], 0) for i in range(2))
+        else:
+            collate_fn = lambda batch: t.stack([t.from_numpy(b) for b in batch], 0)
+        self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
+        self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
+        self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
         self.print_stats()
 
     def print_stats(self):
