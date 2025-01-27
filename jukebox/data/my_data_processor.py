@@ -15,19 +15,20 @@ class DataProcessor:
         # Create datasets
         self.train_dataset = FilesAudioDataset(train_dir, sample_rate, min_duration, max_duration)
         self.test_dataset = FilesAudioDataset(test_dir, sample_rate, min_duration, max_duration)
-
+        # print(f"training dataset len len {self.train_dataset}")
         # Split train dataset for train/test splits if needed
         total_samples = len(self.train_dataset)
         test_size = int(0.1 * total_samples)  # 10% for test
         train_size = total_samples - test_size
 
         self.train_dataset, self.val_dataset = random_split(self.train_dataset, [train_size, test_size])
-
+        # print(f"training dataset len len {self.train_dataset}")
         # Create DataLoaders
         self.batch_size = batch_size
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
         self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+        self.print_stats()
 
     def print_stats(self):
         print(f"Train Dataset: {len(self.train_dataset)} samples")
