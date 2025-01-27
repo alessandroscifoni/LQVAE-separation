@@ -50,7 +50,13 @@ class DataProcessor():
     def create_samplers(self, hps):
         if not dist.is_available():
             print("Not using distributed sampler")
-            self.train_sampler = BatchSampler(RandomSampler(self.train_dataset), batch_size=hps.bs, drop_last=True)
+            rand_sampler = RandomSampler(self.train_dataset)
+            print(f"Random sampler: {rand_sampler}")
+            print(f"Random len sampler: {len(rand_sampler)}")
+            self.train_sampler = BatchSampler(rand_sampler, batch_size=hps.bs, drop_last=True)
+            print(f"Train sampler: {self.train_sampler}")
+            print(f"Train len sampler: {len(self.train_sampler)}")
+
             self.test_sampler = BatchSampler(RandomSampler(self.test_dataset), batch_size=hps.bs, drop_last=True)
         else:
             self.train_sampler = DistributedSampler(self.train_dataset)
