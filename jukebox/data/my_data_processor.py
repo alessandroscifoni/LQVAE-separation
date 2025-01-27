@@ -22,7 +22,7 @@ class DataProcessor:
         total_samples = len(self.train_dataset)
         test_size = int(0.1 * total_samples)  # 10% for test
         train_size = total_samples - test_size
-
+        print(f"Train Dataset: {len(self.train_dataset)} samples")
         self.train_dataset, self.val_dataset = random_split(self.train_dataset, [train_size, test_size])
         # print(f"training dataset len len {self.train_dataset}")
         # Create DataLoaders
