@@ -58,6 +58,9 @@ class FilesAudioDataset(Dataset):
         assert isinstance(shift, (int, float)), f"shift must be int or float, not {type(self.shift)}"
         print(f"Shift type {type(shift)}")
         print(f"item type {type(item)}")
+        print(f"item len {len(item)}")
+        print(f"item[0] type {type(item[0])}")
+        print(f"item[0] len {len(item[0])}")
         offset = item * self.sample_length + shift # Note we centred shifts, so adding now
         midpoint = offset + half_interval
         assert 0 <= midpoint < self.cumsum[-1], f'Midpoint {midpoint} of item beyond total length {self.cumsum[-1]}'
