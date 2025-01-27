@@ -26,7 +26,7 @@ class FilesAudioDataset:
             self.max_samples = int(self.max_duration_in_files * sample_rate)
         else:
             self.max_samples = int(max_duration * sample_rate)
-        self.target_length = chank_duration * sample_rate
+        self.target_length = int(chank_duration * sample_rate)
 
         # Precompute chunk indices for fast access
         self.chunk_indices = self._precompute_chunk_indices()
