@@ -31,6 +31,7 @@ class DataProcessor:
             collate_fn = lambda batch: tuple(t.stack([t.from_numpy(b[i]) for b in batch], 0) for i in range(2))
         else:
             collate_fn = lambda batch: t.stack([t.from_numpy(b) for b in batch], 0)
+        print(f"Train Dataset: {len(self.train_dataset)} samples")
         self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
         self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
