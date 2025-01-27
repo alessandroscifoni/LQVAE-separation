@@ -27,9 +27,9 @@ class EncoderConvBlock(nn.Module):
 
         #     x = block(x)
         #     print(f"blocco {i} shape: {x.shape}")
-        print(f"input EncoderConvBlock shape: {x.shape}")
+        # print(f"input EncoderConvBlock shape: {x.shape}")
         out = self.model(x)
-        print(f"output EncoderConvBlock shape: {out.shape}")
+        # print(f"output EncoderConvBlock shape: {out.shape}")
         return out
 
 class DecoderConvBock(nn.Module):
