@@ -3,7 +3,7 @@ import torch
 import os
 
 class FilesAudioDataset:
-    def __init__(self, directory, sample_rate, min_duration, max_duration, target_length):
+    def __init__(self, directory, sample_rate, min_duration, max_duration, chank_duration):
         """
         Args:
             directory (str): Path to the audio files directory.
@@ -16,7 +16,7 @@ class FilesAudioDataset:
         self.sample_rate = sample_rate
         self.min_samples = int(min_duration * sample_rate)
         self.max_samples = int(max_duration * sample_rate)
-        self.target_length = target_length
+        self.target_length = chank_duration * sample_rate
 
         # Precompute chunk indices for fast access
         self.chunk_indices = self._precompute_chunk_indices()
