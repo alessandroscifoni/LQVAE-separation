@@ -15,6 +15,7 @@ class DataProcessor:
             chank_duration (float): Duration of each chunk in seconds.
         """
         # Create datasets
+        print(f"Train Dir: {train_dir}")
         self.train_dataset = FilesAudioDataset(train_dir, sample_rate, min_duration, max_duration, chunk_duration)
         self.test_dataset = FilesAudioDataset(test_dir, sample_rate, min_duration, max_duration, chunk_duration)
         # print(f"training dataset len len {self.train_dataset}")

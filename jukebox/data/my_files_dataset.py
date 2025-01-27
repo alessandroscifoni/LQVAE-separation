@@ -12,7 +12,7 @@ class FilesAudioDataset:
             max_duration (float): Maximum duration (in seconds) of audio files.
             target_length (int): Number of samples for each chunk (e.g., sample_rate * desired_chunk_duration).
         """
-        self.files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".wav")]
+        self.files = [os.path.join(dir, f) for dir in os.listdir(directory) for f in os.listdir(os.path.join(directory, dir)) if f.endswith(".wav")]
         print(f"Found {len(self.files)} audio files in {directory}")
         self.sample_rate = sample_rate
         self.min_samples = int(min_duration * sample_rate)
