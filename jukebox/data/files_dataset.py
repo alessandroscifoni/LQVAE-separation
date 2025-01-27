@@ -107,4 +107,6 @@ class FilesAudioDataset(Dataset):
         return int(np.floor(self.cumsum[-1] / self.sample_length))
 
     def __getitem__(self, item):
+        print(f"Item type in _getitem_ {type(item)}")
+
         return self.get_item(item)
