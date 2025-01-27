@@ -37,6 +37,7 @@ class FilesAudioDataset:
         chunk_indices = []
         for file_idx, file in enumerate(self.files):
             num_chunks = self._num_chunks(file)
+            print(f"File {file_idx}: {num_chunks} chunks")
             for chunk_idx in range(num_chunks):
                 chunk_indices.append((file_idx, chunk_idx))
         return chunk_indices
