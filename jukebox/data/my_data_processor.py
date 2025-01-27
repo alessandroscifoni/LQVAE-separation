@@ -12,6 +12,7 @@ class DataProcessor:
             batch_size (int): Batch size for DataLoader.
             min_duration (float): Minimum duration for audio files.
             max_duration (float): Maximum duration for audio files.
+            chank_duration (float): Duration of each chunk in seconds.
         """
         # Create datasets
         self.train_dataset = FilesAudioDataset(train_dir, sample_rate, min_duration, max_duration, chunk_duration)

@@ -15,7 +15,15 @@ class FilesAudioDataset:
         self.files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".wav")]
         self.sample_rate = sample_rate
         self.min_samples = int(min_duration * sample_rate)
-        self.max_samples = int(max_duration * sample_rate)
+        # Get the durations of all audio files
+        self.durations = self._calculate_durations(directory)
+        self.max_duration_in_files = max(self.durations) if self.durations else 0  # Maximum file duration
+        
+        # Handle max_samples based on max_duration or maximum file duration
+        if max_duration == float('inf'):
+            self.max_samples = int(self.max_duration_in_files * sample_rate)
+        else:
+            self.max_samples = int(max_duration * sample_rate)
         self.target_length = chank_duration * sample_rate
 
         # Precompute chunk indices for fast access
@@ -67,3 +75,10 @@ class FilesAudioDataset:
             chunk = torch.nn.functional.pad(chunk, (0, self.target_length - chunk.shape[1]))
 
         return chunk.numpy()
+    def _calculate_durations(self, files):
+        durations = []
+        for file in files:
+            info = torchaudio.info(file)
+            duration = info.num_frames / info.sample_rate  # Duration in seconds
+            durations.append(duration)
+        return durations
