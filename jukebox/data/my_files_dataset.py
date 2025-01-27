@@ -43,4 +43,4 @@ class FilesAudioDataset(Dataset):
             resample = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)
             waveform = resample(waveform)
 
-        return waveform  # Return waveform and file path for debugging/metadata
+        return waveform.numpy()  # Return waveform and file path for debugging/metadata
