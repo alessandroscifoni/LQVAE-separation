@@ -1,46 +1,69 @@
 import torchaudio
-from torch.utils.data import Dataset
-import librosa
+import torch
+import os
 
-class FilesAudioDataset(Dataset):
-    def __init__(self, audio_files_dir, sample_rate=16000, min_duration=1.0, max_duration=float('inf')):
+class FilesAudioDataset:
+    def __init__(self, directory, sample_rate, min_duration, max_duration, target_length):
         """
         Args:
-            audio_files_dir (str): Path to the directory containing audio files.
-            sample_rate (int): Target sample rate for audio files.
-            min_duration (float): Minimum duration (in seconds) to include a file.
-            max_duration (float): Maximum duration (in seconds) to include a file.
+            directory (str): Path to the audio files directory.
+            sample_rate (int): Desired sample rate for audio files.
+            min_duration (float): Minimum duration (in seconds) of audio files.
+            max_duration (float): Maximum duration (in seconds) of audio files.
+            target_length (int): Number of samples for each chunk (e.g., sample_rate * desired_chunk_duration).
         """
+        self.files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".wav")]
         self.sample_rate = sample_rate
-        self.min_duration = min_duration
-        self.max_duration = max_duration
+        self.min_samples = int(min_duration * sample_rate)
+        self.max_samples = int(max_duration * sample_rate)
+        self.target_length = target_length
 
-        # Find all audio files in the directory
-        self.files = librosa.util.find_files(audio_files_dir, ext=['wav'])
-        self.durations = []
+        # Precompute chunk indices for fast access
+        self.chunk_indices = self._precompute_chunk_indices()
 
-        # Filter files based on duration
-        for file in self.files:
-            info = torchaudio.info(file)
-            duration = info.num_frames / info.sample_rate
-            if min_duration <= duration <= max_duration:
-                self.durations.append(duration)
-            else:
-                self.files.remove(file)
-
-        print(f"Filtered {len(self.files)} files from {audio_files_dir} based on duration.")
+    def _precompute_chunk_indices(self):
+        """Precompute chunk indices and their corresponding file paths."""
+        chunk_indices = []
+        for file_idx, file in enumerate(self.files):
+            num_chunks = self._num_chunks(file)
+            for chunk_idx in range(num_chunks):
+                chunk_indices.append((file_idx, chunk_idx))
+        return chunk_indices
 
     def __len__(self):
-        return len(self.files)
+        # Return the total number of chunks
+        return len(self.chunk_indices)
 
     def __getitem__(self, idx):
-        # Load the audio file
-        file_path = self.files[idx]
-        waveform, sr = torchaudio.load(file_path)
-        
-        # Resample if necessary
-        if sr != self.sample_rate:
-            resample = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)
-            waveform = resample(waveform)
+        # Use the precomputed chunk index list to quickly find the corresponding file and chunk
+        file_idx, chunk_idx = self.chunk_indices[idx]
+        return self._get_chunk(self.files[file_idx], chunk_idx)
 
-        return waveform.numpy()  # Return waveform and file path for debugging/metadata
+    def _num_chunks(self, file):
+        """Calculate the number of chunks for a given file."""
+        waveform, sr = torchaudio.load(file)
+        if sr != self.sample_rate:
+            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)(waveform)
+        num_samples = waveform.shape[1]
+        if num_samples < self.min_samples or num_samples > self.max_samples:
+            return 0  # Ignore files outside duration range
+        return (num_samples + self.target_length - 1) // self.target_length  # Ceil division
+
+    def _get_chunk(self, file, chunk_idx):
+        """Extract a specific chunk from a file."""
+        waveform, sr = torchaudio.load(file)
+        if sr != self.sample_rate:
+            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)(waveform)
+
+        num_samples = waveform.shape[1]
+        start_idx = chunk_idx * self.target_length
+        end_idx = start_idx + self.target_length
+
+        # Apply padding or truncation to extract the chunk
+        if start_idx >= num_samples:
+            raise IndexError("Chunk index out of range")
+        chunk = waveform[:, start_idx:end_idx]
+        if chunk.shape[1] < self.target_length:
+            chunk = torch.nn.functional.pad(chunk, (0, self.target_length - chunk.shape[1]))
+
+        return chunk.numpy()
