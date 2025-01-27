@@ -97,6 +97,8 @@ class FilesAudioDataset(Dataset):
         return self.get_song_chunk(index, offset, test)
 
     def __len__(self):
+        print(f"CUMSUM {self.cumsum}")
+        print(len(self.cumsum))
         return int(np.floor(self.cumsum[-1] / self.sample_length))
 
     def __getitem__(self, item):
