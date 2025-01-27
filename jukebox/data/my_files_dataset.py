@@ -59,7 +59,7 @@ class FilesAudioDataset:
         num_samples = waveform.shape[1]
         if num_samples < self.min_samples or num_samples > self.max_samples:
             return 0  # Ignore files outside duration range
-        return (num_samples + self.target_length - 1) // self.target_length  # Ceil division
+        return int((num_samples + self.target_length - 1) // self.target_length)  # Ceil division
 
     def _get_chunk(self, file, chunk_idx):
         """Extract a specific chunk from a file."""
