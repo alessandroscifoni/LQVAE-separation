@@ -13,10 +13,12 @@ class FilesAudioDataset:
             target_length (int): Number of samples for each chunk (e.g., sample_rate * desired_chunk_duration).
         """
         self.files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith(".wav")]
+        print(f"Found {len(self.files)} audio files in {directory}")
         self.sample_rate = sample_rate
         self.min_samples = int(min_duration * sample_rate)
         # Get the durations of all audio files
         self.durations = self._calculate_durations(self.files)
+        print(f"Found {len(self.durations)} audio files")
         self.max_duration_in_files = max(self.durations) if self.durations else 0  # Maximum file duration
         
         # Handle max_samples based on max_duration or maximum file duration
@@ -28,6 +30,7 @@ class FilesAudioDataset:
 
         # Precompute chunk indices for fast access
         self.chunk_indices = self._precompute_chunk_indices()
+        print(f"Precomputed {len(self.chunk_indices)} chunks")
 
     def _precompute_chunk_indices(self):
         """Precompute chunk indices and their corresponding file paths."""
