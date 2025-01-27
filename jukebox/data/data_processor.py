@@ -75,6 +75,7 @@ class DataProcessor():
                                       worker_init_fn=wif,
                                       sampler=self.test_sampler, pin_memory=False,
                                       drop_last=False, collate_fn=collate_fn)
+        print(f"Test {len(self.test_loader)} samples")
 
     def print_stats(self, hps):
         # print_all(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
