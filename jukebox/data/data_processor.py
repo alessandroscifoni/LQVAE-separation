@@ -73,8 +73,8 @@ class DataProcessor():
         print('Creating Data Loader')
         print(f"Train {len(self.train_dataset)} samples. Test {len(self.test_dataset)} samples")
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=hps.bs, num_workers=hps.nworkers,
-                                       sampler=self.train_sampler, pin_memory=False, 
+        self.train_loader = DataLoader(self.train_dataset, batch_size=1, num_workers=hps.nworkers,
+                                       sampler=self.train_sampler, pin_memory=False, worker_init_fn=wif,
                                        drop_last=True, collate_fn=collate_fn)
         print(f"Train {len(self.train_loader)} samples")
         self.test_loader = DataLoader(self.test_dataset, batch_size=hps.bs, num_workers=hps.nworkers,
