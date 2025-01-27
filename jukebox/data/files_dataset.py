@@ -111,5 +111,7 @@ class FilesAudioDataset(Dataset):
 
     def __getitem__(self, item):
         print(f"Item type in _getitem_ {type(item)}")
-
-        return self.get_item(item)
+        ris = []
+        for i in range(len(item)):
+            ris.append(self.get_item(item[i]))
+        return ris
