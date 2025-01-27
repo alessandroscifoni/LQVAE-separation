@@ -55,6 +55,9 @@ class FilesAudioDataset(Dataset):
         # For a given dataset item and shift, return song index and offset within song
         half_interval = self.sample_length//2
         shift = np.random.randint(-half_interval, half_interval) if self.aug_shift else 0
+        assert isinstance(self.shift, (int, float)), f"shift must be int or float, not {type(self.shift)}"
+        print(f"Shift type {type(shift)}")
+        print(f"item type {type(item)}")
         offset = item * self.sample_length + shift # Note we centred shifts, so adding now
         midpoint = offset + half_interval
         assert 0 <= midpoint < self.cumsum[-1], f'Midpoint {midpoint} of item beyond total length {self.cumsum[-1]}'
