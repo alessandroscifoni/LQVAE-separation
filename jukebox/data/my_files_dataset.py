@@ -16,7 +16,7 @@ class FilesAudioDataset:
         self.sample_rate = sample_rate
         self.min_samples = int(min_duration * sample_rate)
         # Get the durations of all audio files
-        self.durations = self._calculate_durations(directory)
+        self.durations = self._calculate_durations(self.files)
         self.max_duration_in_files = max(self.durations) if self.durations else 0  # Maximum file duration
         
         # Handle max_samples based on max_duration or maximum file duration
