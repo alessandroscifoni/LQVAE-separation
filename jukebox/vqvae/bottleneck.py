@@ -210,7 +210,10 @@ class Bottleneck(nn.Module):
             end_level = self.levels
         xs_quantised = [level_block.decode(z) for (level_block, z) in zip(self.level_blocks[start_level:end_level], zs)]
         return xs_quantised
-
+    def one_level_forward(self, xs):
+        level_block = self.level_blocks[-1]
+        zs, xs_quantised, commit_losses, metrics = level_block(xs, update_k=self.training)
+        return zs, xs_quantised, commit_losses, metrics
     def forward(self, xs):
         zs, xs_quantised, commit_losses, metrics = [], [], [], []
         for level in range(self.levels):
