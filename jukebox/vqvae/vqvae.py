@@ -199,6 +199,7 @@ class VQVAE(nn.Module):
         x_sums = []
         for level in range(self.levels):
             x_level = xs_quantised[level]
+            print(f"Quantization shape at level {level}: {x_level.shape}")  # Print the shape
             x_sum = 1/2 * x_level[:x_level.shape[0]//2, :] + 1/2*x_level[x_level.shape[0]//2:, :]
             print(f"Sum quantization shape at level {level}: {x_sum.shape}")  # Print the shape
             x_sums.append(x_sum)
