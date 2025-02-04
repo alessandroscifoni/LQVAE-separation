@@ -126,6 +126,8 @@ class Decoder(nn.Module):
             assert len(xs) == 1
         x = xs[-1]
         N, T = x.shape[0], x.shape[-1]
+        print(f"input Decoder shape: {x.shape}")
+        print(f"N and T are {N} and {T}")
         emb = self.output_emb_width
         assert_shape(x, (N, emb, T))
 
