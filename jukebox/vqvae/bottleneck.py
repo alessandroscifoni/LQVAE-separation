@@ -212,6 +212,7 @@ class Bottleneck(nn.Module):
         return xs_quantised
     def one_level_forward(self, xs):
         level_block = self.level_blocks[-1]
+        
         zs, xs_quantised, commit_losses, metrics = level_block(xs, update_k=self.training)
         return zs, xs_quantised, commit_losses, metrics
     def forward(self, xs):
