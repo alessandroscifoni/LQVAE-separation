@@ -63,6 +63,13 @@ class VQVAE(nn.Module):
             this_block_kwargs = dict(block_kwargs)
             this_block_kwargs["width"] *= self.multipliers[level]
             this_block_kwargs["depth"] *= self.multipliers[level]
+            
+            # distillated version makes the width and depth of the resnet float
+            if isinstance(this_block_kwargs["width"], float):
+                this_block_kwargs["width"] = int(this_block_kwargs["width"])
+
+            if isinstance(this_block_kwargs["depth"], float):
+                this_block_kwargs["depth"] = int(this_block_kwargs["depth"])
             return this_block_kwargs
 
         encoder = lambda level: Encoder(x_channels, emb_width, level + 1,

@@ -14,11 +14,7 @@ class EncoderConvBlock(nn.Module):
         if down_t > 0:
             for i in range(down_t):
                 # print(f"depth of resnet at down_t {down_t} from encoderconvblock is {depth}")
-                # distillated version makes the width and depth of the resnet float
-                if isinstance(width, float):
-                    width = int(width * input_emb_width)
-                if isinstance(depth, float):
-                    depth = int(depth * input_emb_width)
+                
                 print(f"width, filter_t, stride_t, pad_t: {width}, {filter_t}, {stride_t}, {pad_t}")
                 block = nn.Sequential(
                     nn.Conv1d(input_emb_width if i == 0 else width, width, filter_t, stride_t, pad_t),
