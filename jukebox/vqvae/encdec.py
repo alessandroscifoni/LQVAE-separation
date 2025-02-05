@@ -64,6 +64,7 @@ class Encoder(nn.Module):
         self.strides_t = strides_t
 
         block_kwargs_copy = dict(**block_kwargs)
+        print(f"depth for the resnet is {block_kwargs_copy["depth"]} from the ENCODER")
         if 'reverse_decoder_dilation' in block_kwargs_copy:
             del block_kwargs_copy['reverse_decoder_dilation']
         level_block = lambda level, down_t, stride_t: EncoderConvBlock(input_emb_width if level == 0 else output_emb_width,
