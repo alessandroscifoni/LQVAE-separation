@@ -63,7 +63,7 @@ class VQVAE(nn.Module):
             this_block_kwargs = dict(block_kwargs)
             this_block_kwargs["width"] *= self.multipliers[level]
             this_block_kwargs["depth"] *= self.multipliers[level]
-            
+
             # distillated version makes the width and depth of the resnet float
             if isinstance(this_block_kwargs["width"], float):
                 this_block_kwargs["width"] = int(this_block_kwargs["width"])
@@ -146,7 +146,7 @@ class VQVAE(nn.Module):
         for level in range(self.levels):
             encoder = self.encoders[level]
             x_out = encoder(x_in)
-            print(f"Encoder output shape at level {level}: {x_out[-1].shape}")  # Print the shape
+            # print(f"Encoder output shape at level {level}: {x_out[-1].shape}")  # Print the shape
             xs.append(x_out[-1])
         return xs
 
@@ -197,7 +197,7 @@ class VQVAE(nn.Module):
         for level in range(self.levels):
             decoder = self.decoders[level]
             x_out = decoder(xs_quantised[level:level+1], all_levels=False)
-            print(f"Decoder output shape at level {level}: {x_out.shape}")  # Print the shape
+            # print(f"Decoder output shape at level {level}: {x_out.shape}")  # Print the shape
             assert_shape(x_out, x_in.shape)
             x_outs.append(x_out)
 

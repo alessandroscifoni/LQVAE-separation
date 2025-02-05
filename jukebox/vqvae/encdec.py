@@ -15,7 +15,7 @@ class EncoderConvBlock(nn.Module):
             for i in range(down_t):
                 # print(f"depth of resnet at down_t {down_t} from encoderconvblock is {depth}")
                 
-                print(f"width, filter_t, stride_t, pad_t: {width}, {filter_t}, {stride_t}, {pad_t}")
+                # print(f"width, filter_t, stride_t, pad_t: {width}, {filter_t}, {stride_t}, {pad_t}")
                 block = nn.Sequential(
                     nn.Conv1d(input_emb_width if i == 0 else width, width, filter_t, stride_t, pad_t),
                     Resnet1D(width, depth, m_conv, dilation_growth_rate, dilation_cycle, zero_out, res_scale),
@@ -76,7 +76,7 @@ class Encoder(nn.Module):
         self.level_blocks = nn.ModuleList()
         iterator = zip(list(range(self.levels)), downs_t, strides_t)
         for level, down_t, stride_t in iterator:
-            print(f"level EncoderBlock: {level}, down_t: {down_t}, stride_t: {stride_t}")
+            # print(f"level EncoderBlock: {level}, down_t: {down_t}, stride_t: {stride_t}")
             self.level_blocks.append(level_block(level, down_t, stride_t))
 
     def forward(self, x):
@@ -87,13 +87,13 @@ class Encoder(nn.Module):
 
         # 64, 32, ...
         iterator = zip(list(range(self.levels)), self.downs_t, self.strides_t)
-        print(f"start Encoder")
+        # print(f"start Encoder")
         for level, down_t, stride_t in iterator:
             level_block = self.level_blocks[level]
-            print(f"level: {level}, down_t: {down_t}, stride_t: {stride_t}")
-            print(f"input Encoder shape: {x.shape}")
+            # print(f"level: {level}, down_t: {down_t}, stride_t: {stride_t}")
+            # print(f"input Encoder shape: {x.shape}")
             x = level_block(x)
-            print(f"output Encoder shape: {x.shape}")
+            # print(f"output Encoder shape: {x.shape}")
             emb, T = self.output_emb_width, T // (stride_t ** down_t)
             assert_shape(x, (N, emb, T))
             xs.append(x)
@@ -130,8 +130,8 @@ class Decoder(nn.Module):
             assert len(xs) == 1
         x = xs[-1]
         N, T = x.shape[0], x.shape[-1]
-        print(f"input Decoder shape: {x.shape}")
-        print(f"N and T are {N} and {T}")
+        # print(f"input Decoder shape: {x.shape}")
+        # print(f"N and T are {N} and {T}")
         emb = self.output_emb_width
         assert_shape(x, (N, emb, T))
 
