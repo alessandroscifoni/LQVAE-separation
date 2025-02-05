@@ -13,7 +13,7 @@ class EncoderConvBlock(nn.Module):
         filter_t, pad_t = stride_t * 2, stride_t // 2
         if down_t > 0:
             for i in range(down_t):
-                print(f"depth of resnet at down_t {down_t} from encoderconvblock is {depth}")
+                # print(f"depth of resnet at down_t {down_t} from encoderconvblock is {depth}")
                 block = nn.Sequential(
                     nn.Conv1d(input_emb_width if i == 0 else width, width, filter_t, stride_t, pad_t),
                     Resnet1D(width, depth, m_conv, dilation_growth_rate, dilation_cycle, zero_out, res_scale),
@@ -64,7 +64,7 @@ class Encoder(nn.Module):
         self.strides_t = strides_t
 
         block_kwargs_copy = dict(**block_kwargs)
-        print(f"depth for the resnet is {block_kwargs_copy["depth"]} from the ENCODER")
+        # print(f"depth for the resnet is {block_kwargs_copy["depth"]} from the ENCODER")
         if 'reverse_decoder_dilation' in block_kwargs_copy:
             del block_kwargs_copy['reverse_decoder_dilation']
         level_block = lambda level, down_t, stride_t: EncoderConvBlock(input_emb_width if level == 0 else output_emb_width,

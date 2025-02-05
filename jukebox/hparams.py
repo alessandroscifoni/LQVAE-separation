@@ -63,6 +63,30 @@ vqvae = Hyperparams(
 HPARAMS_REGISTRY["vqvae"] = vqvae
 
 # Model hps
+distillated_vqvae = Hyperparams(
+    sr = 16000, #for babyslakh #22050,# 44100,
+    levels = 3,
+    downs_t = (2,2,2), #(3, 2, 2), #(3, 2, 2),
+    strides_t = (2, 2, 2),
+    emb_width = 64,
+    l_bins = 2048,
+    l_mu = 0.99,
+    commit = 1.0,#0.02, #0.2, #0.02,
+    spectral = 0.0,
+    multispectral = 1.0,
+    hvqvae_multipliers = (2, 1, 1),
+    loss_fn = 'lmix',
+    lmix_l2 = 1.0,
+    lmix_linf=0.02,
+    width = 32,
+    depth = 4,
+    m_conv = 1.0,
+    dilation_growth_rate = 3,
+    # restore_vqvae=REMOTE_PREFIX + 'jukebox/models/5b/vqvae.pth.tar',
+)
+HPARAMS_REGISTRY["distillated_vqvae"] = distillated_vqvae
+
+# Model hps
 vqvae_unsupervised = Hyperparams(
     levels = 1,
     downs_t = (5,),

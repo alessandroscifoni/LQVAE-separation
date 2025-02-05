@@ -51,7 +51,7 @@ class Resnet1D(nn.Module):
                 return depth
             else:
                 return depth % dilation_cycle
-        print(f"DEPTH in RESNET is {n_depth}")
+        # print(f"DEPTH in RESNET is {n_depth}")
         blocks = [ResConv1DBlock(n_in, int(m_conv * n_in),
                                  dilation=dilation_growth_rate ** _get_depth(depth),
                                  zero_out=zero_out,
