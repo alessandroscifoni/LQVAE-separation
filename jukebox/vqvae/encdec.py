@@ -124,6 +124,8 @@ class Decoder(nn.Module):
         self.out = nn.Conv1d(output_emb_width, input_emb_width, 3, 1, 1)
 
     def forward(self, xs, all_levels=True):
+        print(f"xs type is {type(xs)}")
+        print(f"xs len is {len(xs)}")
         if all_levels:
             assert len(xs) == self.levels
         else:
