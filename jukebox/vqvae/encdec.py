@@ -129,6 +129,8 @@ class Decoder(nn.Module):
         else:
             assert len(xs) == 1
         x = xs[-1]
+        print(f"x type is {type(x)}")
+        print(f"x len is {len(x)}")
         N, T = x.shape[0], x.shape[-1]
         # print(f"input Decoder shape: {x.shape}")
         # print(f"N and T are {N} and {T}")
