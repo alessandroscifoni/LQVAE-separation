@@ -148,7 +148,6 @@ class BottleneckBlock(nn.Module):
 
     def forward(self, x, update_k=True):
         N, width, T = x.shape
-        print(f"input shape in forward BottleneckBlock: {x.shape}")
         # Preprocess
         x, prenorm = self.preprocess(x)
 
