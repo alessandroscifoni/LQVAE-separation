@@ -26,7 +26,7 @@ class OffsetDataset(Dataset):
 class DataProcessor():
     def __init__(self, hps):
         self.train_dataset = FilesAudioDataset(hps)
-        print(f"IL TIPO DEL TRAINING DATASET E' {type(self.train_dataset)}")
+        
         hps.audio_files_dir = hps.test_audio_files_dir
         self.test_dataset = FilesAudioDataset(hps)
         len_test = int(len(self.test_dataset))

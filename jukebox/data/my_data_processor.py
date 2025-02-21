@@ -17,6 +17,7 @@ class DataProcessor:
         # Create datasets
         print(f"Train Dir: {train_dir}")
         self.train_dataset = FilesAudioDataset(train_dir, sample_rate, min_duration, max_duration, chunk_duration)
+        print(f"IL TIPO DEL TRAINING DATASET E' {type(self.train_dataset)}")
         self.test_dataset = FilesAudioDataset(test_dir, sample_rate, min_duration, max_duration, chunk_duration)
         # print(f"training dataset len len {self.train_dataset}")
         # Split train dataset for train/test splits if needed
