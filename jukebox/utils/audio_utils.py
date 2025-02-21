@@ -37,22 +37,24 @@ def calculate_bandwidth(dataset, hps, duration=600):
         l1 += np.sum(np.abs(samples))
         total += np.sum(samples)
         total_sq += np.sum(samples ** 2)
-        idx += max(16, dist.get_world_size())
+        idx += 1
+        # idx += max(16, dist.get_world_size())
 
-    if dist.is_available():
-        from jukebox.utils.dist_utils import allreduce
-        n_seen = allreduce(n_seen)
-        total = allreduce(total)
-        total_sq = allreduce(total_sq)
-        l1 = allreduce(l1)
-        spec_nelem = allreduce(spec_nelem)
-        spec_norm_total = allreduce(spec_norm_total)
+    # if dist.is_available():
+    #     from jukebox.utils.dist_utils import allreduce
+    #     n_seen = allreduce(n_seen)
+    #     total = allreduce(total)
+    #     total_sq = allreduce(total_sq)
+    #     l1 = allreduce(l1)
+    #     spec_nelem = allreduce(spec_nelem)
+    #     spec_norm_total = allreduce(spec_norm_total)
 
     mean = total / n_seen
     bandwidth = dict(l2 = total_sq / n_seen - mean ** 2,
                      l1 = l1 / n_seen,
                      spec = spec_norm_total / spec_nelem)
-    print_once(bandwidth)
+    # print_once(bandwidth)
+    print(f"bandwith: {bandwidth}")
     return bandwidth
 
 def audio_preprocess(x, hps):

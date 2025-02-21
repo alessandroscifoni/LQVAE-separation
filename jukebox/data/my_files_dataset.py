@@ -3,19 +3,19 @@ import torch
 import os
 
 class FilesAudioDataset:
-    def __init__(self, directory, sample_rate, min_duration, max_duration, chank_duration):
+    def __init__(self, directory, sr, min_duration, max_duration, chank_duration):
         """
         Args:
             directory (str): Path to the audio files directory.
-            sample_rate (int): Desired sample rate for audio files.
+            sr (int): Desired sample rate for audio files.
             min_duration (float): Minimum duration (in seconds) of audio files.
             max_duration (float): Maximum duration (in seconds) of audio files.
-            target_length (int): Number of samples for each chunk (e.g., sample_rate * desired_chunk_duration).
+            target_length (int): Number of samples for each chunk (e.g., sr * desired_chunk_duration).
         """
         self.files = [os.path.join(directory,os.path.join(dir, f)) for dir in os.listdir(directory) for f in os.listdir(os.path.join(directory, dir)) if f.endswith(".wav")]
         print(f"Found {len(self.files)} audio files in {directory}")
-        self.sample_rate = sample_rate
-        self.min_samples = int(min_duration * sample_rate)
+        self.sr = sr
+        self.min_samples = int(min_duration * sr)
         # Get the durations of all audio files
         self.durations = self._calculate_durations(self.files)
         print(f"Found {len(self.durations)} audio files")
@@ -23,10 +23,10 @@ class FilesAudioDataset:
         
         # Handle max_samples based on max_duration or maximum file duration
         if max_duration == float('inf'):
-            self.max_samples = int(self.max_duration_in_files * sample_rate)
+            self.max_samples = int(self.max_duration_in_files * sr)
         else:
-            self.max_samples = int(max_duration * sample_rate)
-        self.target_length = int(chank_duration * sample_rate)
+            self.max_samples = int(max_duration * sr)
+        self.target_length = int(chank_duration * sr)
 
         # Precompute chunk indices for fast access
         self.chunk_indices = self._precompute_chunk_indices()
@@ -54,8 +54,8 @@ class FilesAudioDataset:
     def _num_chunks(self, file):
         """Calculate the number of chunks for a given file."""
         waveform, sr = torchaudio.load(file)
-        if sr != self.sample_rate:
-            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)(waveform)
+        if sr != self.sr:
+            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sr)(waveform)
         num_samples = waveform.shape[1]
         if num_samples < self.min_samples or num_samples > self.max_samples:
             return 0  # Ignore files outside duration range
@@ -64,8 +64,8 @@ class FilesAudioDataset:
     def _get_chunk(self, file, chunk_idx):
         """Extract a specific chunk from a file."""
         waveform, sr = torchaudio.load(file)
-        if sr != self.sample_rate:
-            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sample_rate)(waveform)
+        if sr != self.sr:
+            waveform = torchaudio.transforms.Resample(orig_freq=sr, new_freq=self.sr)(waveform)
 
         num_samples = waveform.shape[1]
         start_idx = chunk_idx * self.target_length
@@ -84,6 +84,6 @@ class FilesAudioDataset:
         for file in files:
             print(file)
             info = torchaudio.info(file)
-            duration = info.num_frames / info.sample_rate  # Duration in seconds
+            duration = info.num_frames / info.sr  # Duration in seconds
             durations.append(duration)
         return durations
