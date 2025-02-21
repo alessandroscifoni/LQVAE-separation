@@ -17,7 +17,6 @@ class DataProcessor:
         # Create datasets
         print(f"Train Dir: {train_dir}")
         self.train_dataset = FilesAudioDataset(train_dir, sample_rate, min_duration, max_duration, chunk_duration)
-        print(f"IL TIPO DEL TRAINING DATASET E' {type(self.train_dataset)}")
         self.test_dataset = FilesAudioDataset(test_dir, sample_rate, min_duration, max_duration, chunk_duration)
         # print(f"training dataset len len {self.train_dataset}")
         # Split train dataset for train/test splits if needed
@@ -25,7 +24,7 @@ class DataProcessor:
         test_size = int(0.1 * total_samples)  # 10% for test
         train_size = total_samples - test_size
         print(f"Train Dataset: {len(self.train_dataset)} samples")
-        self.train_dataset, self.val_dataset = random_split(self.train_dataset, [train_size, test_size])
+        self.train_dataset_split, self.val_dataset = random_split(self.train_dataset, [train_size, test_size])
         # print(f"training dataset len len {self.train_dataset}")
         # Create DataLoaders
         self.batch_size = batch_size
@@ -33,14 +32,14 @@ class DataProcessor:
             collate_fn = lambda batch: tuple(t.stack([t.from_numpy(b[i]) for b in batch], 0) for i in range(2))
         else:
             collate_fn = lambda batch: t.stack([t.from_numpy(b) for b in batch], 0)
-        print(f"Train Dataset: {len(self.train_dataset)} samples")
-        self.train_loader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
+        print(f"Train Dataset: {len(self.train_dataset_split)} samples")
+        self.train_loader = DataLoader(self.train_dataset_split, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
         self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
         self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
         self.print_stats()
 
     def print_stats(self):
-        print(f"Train Dataset: {len(self.train_dataset)} samples")
+        print(f"Train Dataset: {len(self.train_dataset_split)} samples")
         print(f"Validation Dataset: {len(self.val_dataset)} samples")
         print(f"Test Dataset: {len(self.test_dataset)} samples")
         print(f"Batch Size: {self.batch_size}")
