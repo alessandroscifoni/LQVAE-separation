@@ -84,6 +84,6 @@ class FilesAudioDataset:
         for file in files:
             print(file)
             info = torchaudio.info(file)
-            duration = info.num_frames / info.sr  # Duration in seconds
+            duration = info.num_frames / info.sample_rate  # Duration in seconds
             durations.append(duration)
         return durations
