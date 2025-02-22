@@ -80,7 +80,7 @@ class Encoder(nn.Module):
             self.level_blocks.append(level_block(level, down_t, stride_t))
 
     def forward(self, x):
-        print(f"input shape: {x.shape}")
+        # print(f"input shape: {x.shape}")
         N, T = x.shape[0], x.shape[-1]
         emb = self.input_emb_width
         assert_shape(x, (N, emb, T))
