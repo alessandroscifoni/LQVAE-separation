@@ -4,6 +4,8 @@ import jukebox.utils.dist_adapter as dist
 import soundfile
 import librosa
 from jukebox.utils.dist_utils import print_once
+import librosa.display
+import matplotlib.pyplot as plt
 
 class DefaultSTFTValues:
     def __init__(self, hps):
@@ -148,5 +150,15 @@ def save_wav(fname, aud, sr):
     aud = t.clamp(aud, -1, 1).cpu().numpy()
     for i in list(range(aud.shape[0])):
         soundfile.write(f'{fname}/item_{i}.wav', aud[i], samplerate=sr, format='wav')
+
+
+def plot_spectrogram(waveform, sr=16000, title="Spectrogram"):
+    spec = librosa.stft(waveform)
+    spec_db = librosa.amplitude_to_db(abs(spec))
+    plt.figure(figsize=(10, 4))
+    librosa.display.specshow(spec_db, sr=sr, x_axis="time", y_axis="log")
+    plt.colorbar()
+    plt.title(title)
+    plt.show()
 
 
