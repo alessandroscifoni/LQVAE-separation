@@ -301,8 +301,8 @@ class VQVAE(nn.Module):
         #loss = loss = (recons_loss + recons_sum_loss) +  self.commit * commit_loss + self.spectral * (spec_loss + spec_sum_loss) +  self.multispectral * (multispec_loss + multispec_sum_loss), commit_loss = sum(commit_losses) + sum(commit_losses_sum) 
         
         #LATENT:
-        print(f"self.commit: {self.commit} - self.spectral: {self.spectral} - self.multispectral: {self.multispectral}")
-        print(f"Reconstruction loss: {recons_loss} - Spectral loss: {spec_loss} - Multispectral loss: {multispec_loss} - Commit loss: {commit_loss} - Latent loss: {latent_loss}")
+        
+        print(f"Reconstruction loss: {recons_loss:.2f} - Spectral loss: {spec_loss:.2f} - Multispectral loss: {multispec_loss:.2f} - Commit loss: {commit_loss:.2f} - Latent loss: {latent_loss:.2f}")
         loss = recons_loss +  self.commit * commit_loss + self.spectral * spec_loss +  self.multispectral * multispec_loss + latent_loss 
 
         with t.no_grad():
