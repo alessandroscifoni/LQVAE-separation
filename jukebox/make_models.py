@@ -58,11 +58,14 @@ def restore_model(hps, model, checkpoint_path):
         # for k in set(checkpoint_hps.keys()).union(set(hps.keys())):
         #     if checkpoint_hps.get(k, None) != hps.get(k, None):
         #         print(k, "Checkpoint:", checkpoint_hps.get(k, None), "Ours:", hps.get(k, None))
-        checkpoint['model'] = {k[7:] if k[:7] == 'module.' else k: v for k, v in checkpoint['model'].items()}
-        model.load_state_dict(checkpoint['model'], strict=False)
-        if 'step' in checkpoint:
-            model.step = checkpoint['step']
-
+        if 'model' in checkpoint:
+            checkpoint['model'] = {k[7:] if k[:7] == 'module.' else k: v for k, v in checkpoint['model'].items()}
+            model.load_state_dict(checkpoint['model'], strict=False)
+            if 'step' in checkpoint:
+                model.step = checkpoint['step']
+        else:
+            # i didn't use the same format
+            model = t.load(checkpoint_path, map_location="cpu")
 def restore_opt(opt, shd, checkpoint_path):
     if not checkpoint_path:
         return
