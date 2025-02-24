@@ -65,7 +65,7 @@ def restore_model(hps, model, checkpoint_path):
                 model.step = checkpoint['step']
         else:
             # i didn't use the same format
-            model = t.load(checkpoint_path, map_location="cpu")
+           model.load_state_dict(t.load(checkpoint_path, map_location="cpu"))
 def restore_opt(opt, shd, checkpoint_path):
     if not checkpoint_path:
         return
