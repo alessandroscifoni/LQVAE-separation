@@ -61,7 +61,7 @@ vqvae = Hyperparams(
 HPARAMS_REGISTRY["vqvae"] = vqvae
 
 # Model hps
-distillated_vqvae = Hyperparams(
+distilled_vqvae = Hyperparams(
     sr = 16000, #for babyslakh #22050,# 44100,
     levels = 3,
     downs_t = (1,1,1), #(3, 2, 2), #(3, 2, 2),
@@ -82,7 +82,7 @@ distillated_vqvae = Hyperparams(
     dilation_growth_rate = 2,
     # restore_vqvae=REMOTE_PREFIX + 'jukebox/models/5b/vqvae.pth.tar',
 )
-HPARAMS_REGISTRY["distillated_vqvae"] = distillated_vqvae
+HPARAMS_REGISTRY["distilled_vqvae"] = distilled_vqvae
 
 # Model hps
 vqvae_unsupervised = Hyperparams(

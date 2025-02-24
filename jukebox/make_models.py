@@ -35,7 +35,7 @@ def load_checkpoint(path):
     #             download(remote_path, local_path)
     #     restore = local_path
     # dist.barrier()
-    checkpoint = t.load(restore, map_location=t.device('cpu'))
+    checkpoint = t.load(restore, map_location=t.device('cpu'), weights_only=True)
     print("Restored from {}".format(restore))
     return checkpoint
 
@@ -85,7 +85,6 @@ def make_vqvae(hps, device='cuda'):
         top_raw_to_tokens = np.prod(downsamples)
         hps.sample_length = (hps.sample_length_in_seconds * hps.sr // top_raw_to_tokens) * top_raw_to_tokens
         print(f"Setting sample length to {hps.sample_length} (i.e. {hps.sample_length/hps.sr} seconds) to be multiple of {top_raw_to_tokens}")
-    print(f"hps.emb_width: {hps.emb_width}")
     vqvae = VQVAE(input_shape=(hps.sample_length,1), levels=hps.levels, downs_t=hps.downs_t, strides_t=hps.strides_t,
                   emb_width=hps.emb_width, l_bins=hps.l_bins,
                   mu=hps.l_mu, commit=hps.commit,
