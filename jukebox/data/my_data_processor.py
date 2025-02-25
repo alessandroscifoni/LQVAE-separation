@@ -21,10 +21,10 @@ class DataProcessor:
         # print(f"training dataset len len {self.train_dataset}")
         # Split train dataset for train/test splits if needed
         total_samples = len(self.train_dataset)
-        test_size = int(0.1 * total_samples)  # 10% for test
-        train_size = total_samples - test_size
+        val_size = int(0.1 * total_samples)  # 10% for test
+        train_size = total_samples - val_size
         print(f"Train Dataset: {len(self.train_dataset)} samples")
-        self.train_dataset_split, self.val_dataset = random_split(self.train_dataset, [train_size, test_size])
+        self.train_dataset_split, self.val_dataset = random_split(self.train_dataset, [train_size, val_size])
         # print(f"training dataset len len {self.train_dataset}")
         # Create DataLoaders
         self.batch_size = batch_size
@@ -33,9 +33,9 @@ class DataProcessor:
         else:
             collate_fn = lambda batch: t.stack([t.from_numpy(b) for b in batch], 0)
         print(f"Train Dataset: {len(self.train_dataset_split)} samples")
-        self.train_loader = DataLoader(self.train_dataset_split, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
-        self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
-        self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, shuffle=False, num_workers=2, collate_fn=collate_fn)
+        self.train_loader = DataLoader(self.train_dataset_split, batch_size=batch_size, drop_last=True, shuffle=True, num_workers=2, collate_fn=collate_fn)
+        self.val_loader = DataLoader(self.val_dataset, batch_size=batch_size, drop_last=True, shuffle=False, num_workers=2, collate_fn=collate_fn)
+        self.test_loader = DataLoader(self.test_dataset, batch_size=batch_size, drop_last=True, shuffle=False, num_workers=2, collate_fn=collate_fn)
         self.print_stats()
 
     def print_stats(self):
