@@ -141,6 +141,7 @@ class Decoder(nn.Module):
         for level, down_t, stride_t in iterator:
             level_block = self.level_blocks[level]
             x = level_block(x)
+            print(f"output Decoder level {level} shape: {x.shape}")
             emb, T = self.output_emb_width, T * (stride_t ** down_t)
             assert_shape(x, (N, emb, T))
             if level != 0 and all_levels:
