@@ -708,10 +708,13 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     shift = int(shift * sample_rate)
     assert sample_tokens * raw_to_tokens <= min(m1.shape[-1], m2.shape[-1]), "Sources must be longer than sample_tokens"
     minin = sample_tokens * raw_to_tokens
+    print(f"minin {minin}")
     m1_real    = m1[:, shift:shift+minin]
     m2_real    = m2[:, shift:shift+minin]
     mix        = alpha[0]*m1_real + alpha[1]*m2_real
     print("CHHHHHEEEECK")
+    print(f"m1 shape {m1.shape}")
+    print(f"m2 shape {m2.shape}")
     print(f"m1_real shape {m1_real.shape}")
     print(f"m2_real shape {m2_real.shape}")
     print(f"mix shape {mix.shape}")
