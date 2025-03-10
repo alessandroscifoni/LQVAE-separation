@@ -745,10 +745,10 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     return mix, latent_mix, z_mixture, m1, m2, m1_real, m2_real
 
 
-def make_models(vqvae_path, priors_list, sample_length, downs_t, sample_rate, commit,
+def make_models(vqvae_conf, vqvae_path, priors_list, sample_length, downs_t, sample_rate, commit,
                 levels=3, level=2, fp16=True, device='cuda'):
     # construct openai vqvae and priors
-    vqvae = make_vqvae(setup_hparams('vqvae', dict(sample_length=sample_length, downs_t=downs_t, sr=sample_rate,
+    vqvae = make_vqvae(setup_hparams(vqvae_con, dict(sample_length=sample_length, downs_t=downs_t, sr=sample_rate,
                                                    commit=commit, restore_vqvae=vqvae_path)), device)
     prior_path_0 = priors_list[0]
     prior_path_1 = priors_list[1]
@@ -769,7 +769,7 @@ def separate(args):
     args.fp16 = True
     assert args.alpha[0] + args.alpha[1] == 1.
 
-    vqvae, priors = make_models(args.restore_vqvae, args.restore_priors, args.sample_length, args.downs_t,
+    vqvae, priors = make_models(args.vqvae_conf, args.restore_vqvae, args.restore_priors, args.sample_length, args.downs_t,
                                 args.sample_rate, args.commit, levels=args.levels, level=args.level,
                                 fp16=args.fp16, device=device)
     mix, latent_mix, z_mixture, m0, m1, m0_real, m1_real = create_mixture_from_audio_files(args.path_1, args.path_2,
