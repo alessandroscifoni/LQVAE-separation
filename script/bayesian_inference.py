@@ -748,7 +748,7 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
 def make_models(vqvae_conf, vqvae_path, priors_list, sample_length, downs_t, sample_rate, commit,
                 levels=3, level=2, fp16=True, device='cuda'):
     # construct openai vqvae and priors
-    vqvae = make_vqvae(setup_hparams(vqvae_con, dict(sample_length=sample_length, downs_t=downs_t, sr=sample_rate,
+    vqvae = make_vqvae(setup_hparams(vqvae_conf, dict(sample_length=sample_length, downs_t=downs_t, sr=sample_rate,
                                                    commit=commit, restore_vqvae=vqvae_path)), device)
     prior_path_0 = priors_list[0]
     prior_path_1 = priors_list[1]
