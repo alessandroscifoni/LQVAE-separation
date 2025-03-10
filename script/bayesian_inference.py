@@ -592,6 +592,11 @@ def evaluate_sdr_gt(gt0, gt1, res0, res1):
 def evaluate_sdr_real(gt0, gt1, res0, res1):
     sdr_0 = torch.zeros((res0.shape[0],))
     sdr_1 = torch.zeros((res1.shape[0],))
+    if torch.all(gt0 == 0):
+        print("Warning: m0_real is entirely zeros.")
+
+    if torch.all(gt1 == 0):
+        print("Warning: m1_real is entirely zeros.")
     for i in range(res0.shape[0]):
         sdr_0[i] = sdr(gt0.unsqueeze(-1).cpu().numpy(), res0[i, :].reshape(1, -1, 1).cpu().numpy())
         sdr_1[i] = sdr(gt1.unsqueeze(-1).cpu().numpy(), res1[i, :].reshape(1, -1, 1).cpu().numpy())
