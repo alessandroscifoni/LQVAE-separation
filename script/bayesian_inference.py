@@ -712,12 +712,15 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     m2_real    = m2[:, shift:shift+minin]
     mix        = alpha[0]*m1_real + alpha[1]*m2_real
     print("CHHHHHEEEECK")
-    if torch.allclose(m1_real, torch.zeros_like(m1), atol=1e-6):  # Adjust atol if needed
+    print(f"m1_real shape {m1_real.shape}")
+    print(f"m2_real shape {m2_real.shape}")
+    print(f"mix shape {mix.shape}")
+    if torch.allclose(m1_real, torch.zeros_like(m1_real), atol=1e-6):  # Adjust atol if needed
         print("Warning: m1_real is nearly all zeros.")
 
-    if torch.allclose(m2_real, torch.zeros_like(m2), atol=1e-6):
+    if torch.allclose(m2_real, torch.zeros_like(m2_real), atol=1e-6):
         print("Warning: m2_real is nearly all zeros.")
-    if torch.allclose(mix, torch.zeros_like(m2), atol=1e-6):
+    if torch.allclose(mix, torch.zeros_like(mix), atol=1e-6):
         print("Warning: mix is nearly all zeros.")
     print("FINE CHEEECK")
     torchaudio.save(f'{save_path}/real_mix.wav', mix.cpu().squeeze(-1), sample_rate=sample_rate)
