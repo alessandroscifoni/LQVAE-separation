@@ -111,7 +111,7 @@ def primed_sample(x_0, x_1, vqvae, priors, m, n_samples, sample_tokens, sigma, c
 
 
     if latent_loss:
-        codebook = torch.load(sum_codebook)
+        codebook = torch.load(sum_codebook, weights_only=True)
         codebook = codebook.to(device)  # shape (1, 2048*2048)
         M = vqvae.bottleneck.one_level_decode(codebook)  # (1, 64, 2048*2048)
         M = M.squeeze(0)  # (64, 2048*2048)
@@ -293,7 +293,7 @@ def ancestral_sample(vqvae, priors, m, n_samples, sample_tokens, sigma=0.01, con
     log_likelihood_sum = torch.zeros((n_samples,)).to(device)
 
     if latent_loss:
-        codebook = torch.load(sum_codebook)
+        codebook = torch.load(sum_codebook, weights_only=True)
         codebook = codebook.to(device)  # shape (1, 2048*2048)
         M = vqvae.bottleneck.one_level_decode(codebook)  # (1, 64, 2048*2048)
         M = M.squeeze(0)  # (64, 2048*2048)
@@ -701,10 +701,10 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     m2, _ = torchaudio.load(path_audio_2)
     m2 /= np.sqrt(2)
     if torch.allclose(m1, torch.zeros_like(m1), atol=1e-6):  # Adjust atol if needed
-        print("Warning: m0_real is nearly all zeros.")
+        print("Warning: m1 is nearly all zeros.")
 
     if torch.allclose(m2, torch.zeros_like(m2), atol=1e-6):
-        print("Warning: m1_real is nearly all zeros.")
+        print("Warning: m2 is nearly all zeros.")
     shift = int(shift * sample_rate)
     assert sample_tokens * raw_to_tokens <= min(m1.shape[-1], m2.shape[-1]), "Sources must be longer than sample_tokens"
     minin = sample_tokens * raw_to_tokens
