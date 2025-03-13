@@ -27,7 +27,7 @@ def sample_level(vqvae, priors, m, n_samples, n_ctx, hop_length, sample_tokens, 
                  chunk_size=None, latent_loss=True, top_k_posterior=0, delta_likelihood=False, sum_codebook=None, emb_width=64):
     xs_0 = torch.zeros(n_samples, 0, dtype=torch.long, device=device)
     xs_1 = torch.zeros(n_samples, 0, dtype=torch.long, device=device)
-
+    print(f"xs_0 shape at the beginning {xs_0.shape}")
     if sample_tokens > n_ctx:
         for start in get_starts(sample_tokens, n_ctx, hop_length):
             xs_0, xs_1, log_p_0_sum, log_p_1_sum, log_likelihood_sum = sample_single_window(xs_0, xs_1, vqvae, priors, m, n_samples, n_ctx, start=start, sigma=sigma,
@@ -42,6 +42,8 @@ def sample_level(vqvae, priors, m, n_samples, n_ctx, hop_length, sample_tokens, 
                                         bs_chunks=bs_chunks, window_mode=window_mode, l_bins=l_bins,
                                         raw_to_tokens=raw_to_tokens, device=device, latent_loss=latent_loss,
                                         top_k_posterior=top_k_posterior, delta_likelihood=delta_likelihood, sum_codebook=sum_codebook, emb_width=emb_width)
+    
+    print(f"xs_0 shape at the end {xs_0.shape}")
     return xs_0, xs_1, log_p_0_sum, log_p_1_sum, log_likelihood_sum
 
 
