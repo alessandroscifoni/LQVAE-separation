@@ -575,6 +575,7 @@ def rejection_sampling(nll0, nll1, res0, res1, remaining0, remaining1, m, alpha,
 def evaluate_sdr_gt(gt0, gt1, res0, res1):
     sdr_0 = torch.zeros((res0.shape[0],))
     sdr_1 = torch.zeros((res1.shape[0],))
+    print(f"res0.shape {res0.shape}")
     for i in range(res0.shape[0]):
         sdr_0[i] = sdr(gt0.unsqueeze(-1).cpu().numpy(), res0[i, :].reshape(1, -1, 1).cpu().numpy())
         sdr_1[i] = sdr(gt1.unsqueeze(-1).cpu().numpy(), res1[i, :].reshape(1, -1, 1).cpu().numpy())
@@ -592,11 +593,6 @@ def evaluate_sdr_gt(gt0, gt1, res0, res1):
 def evaluate_sdr_real(gt0, gt1, res0, res1):
     sdr_0 = torch.zeros((res0.shape[0],))
     sdr_1 = torch.zeros((res1.shape[0],))
-    if torch.allclose(gt0, torch.zeros_like(gt0), atol=1e-6):  # Adjust atol if needed
-        print("Warning: m0_real is nearly all zeros.")
-
-    if torch.allclose(gt1, torch.zeros_like(gt1), atol=1e-6):
-        print("Warning: m1_real is nearly all zeros.")
     for i in range(res0.shape[0]):
         sdr_0[i] = sdr(gt0.unsqueeze(-1).cpu().numpy(), res0[i, :].reshape(1, -1, 1).cpu().numpy())
         sdr_1[i] = sdr(gt1.unsqueeze(-1).cpu().numpy(), res1[i, :].reshape(1, -1, 1).cpu().numpy())
@@ -700,11 +696,6 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     m1 /= np.sqrt(2) #deve essere di dimensioni (1, length) es (1, 5060608)
     m2, _ = torchaudio.load(path_audio_2)
     m2 /= np.sqrt(2)
-    if torch.allclose(m1, torch.zeros_like(m1), atol=1e-6):  # Adjust atol if needed
-        print("Warning: m1 is nearly all zeros.")
-
-    if torch.allclose(m2, torch.zeros_like(m2), atol=1e-6):
-        print("Warning: m2 is nearly all zeros.")
     shift = int(shift * sample_rate)
     assert sample_tokens * raw_to_tokens <= min(m1.shape[-1], m2.shape[-1]), "Sources must be longer than sample_tokens"
     minin = sample_tokens * raw_to_tokens
@@ -712,20 +703,6 @@ def create_mixture_from_audio_files(path_audio_1, path_audio_2, raw_to_tokens, s
     m1_real    = m1[:, shift:shift+minin]
     m2_real    = m2[:, shift:shift+minin]
     mix        = alpha[0]*m1_real + alpha[1]*m2_real
-    print("CHHHHHEEEECK")
-    print(f"m1 shape {m1.shape}")
-    print(f"m2 shape {m2.shape}")
-    print(f"m1_real shape {m1_real.shape}")
-    print(f"m2_real shape {m2_real.shape}")
-    print(f"mix shape {mix.shape}")
-    if torch.allclose(m1_real, torch.zeros_like(m1_real), atol=1e-6):  # Adjust atol if needed
-        print("Warning: m1_real is nearly all zeros.")
-
-    if torch.allclose(m2_real, torch.zeros_like(m2_real), atol=1e-6):
-        print("Warning: m2_real is nearly all zeros.")
-    if torch.allclose(mix, torch.zeros_like(mix), atol=1e-6):
-        print("Warning: mix is nearly all zeros.")
-    print("FINE CHEEECK")
     torchaudio.save(f'{save_path}/real_mix.wav', mix.cpu().squeeze(-1), sample_rate=sample_rate)
     torchaudio.save(f'{save_path}/real_m1.wav',  m1_real.cpu().squeeze(-1), sample_rate=sample_rate)
     torchaudio.save(f'{save_path}/real_m2.wav',  m2_real.cpu().squeeze(-1), sample_rate=sample_rate)
