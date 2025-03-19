@@ -781,9 +781,9 @@ def separate(args):
     rejection_sampling(log_p_0_sum, log_p_1_sum, res_0, res_1, None, None, mix, args.alpha,
                        args.bs, rejection_sigma=None, n_samples=args.sample_tokens)
 
-    sdr_0_sorted, sdr_1_sorted, sdr_0_sorted_idx, sdr_1_sorted_idxevaluate_sdr_gt = (m0, m1, res_0, res_1)
+    sdr_0_sorted, sdr_1_sorted, sdr_0_sorted_idx, sdr_1_sorted_idx = evaluate_sdr_gt(m0, m1, res_0, res_1)
     print(f"average sdr quality of the separated audio against the ground truth decoded signals is {sdr_0_sorted.mean()} and {sdr_1_sorted.mean()}")
-    sdr_0_sorted, sdr_1_sorted, sdr_0_sorted_idx, sdr_1_sorted_idxevaluate_sdr_gt = evaluate_sdr_real(m0_real, m1_real, res_0, res_1)
+    sdr_0_sorted, sdr_1_sorted, sdr_0_sorted_idx, sdr_1_sorted_idx = evaluate_sdr_real(m0_real, m1_real, res_0, res_1)
     print(f"average sdr quality of the separated audio against the real signals is {sdr_0_sorted.mean()} and {sdr_1_sorted.mean()}")
     evaluate_l2_gt(m0, m1, res_0, res_1)
     save_samples(x_0, x_1, res_0, res_1, args.sample_rate, args.alpha, f'{args.save_path}/')
