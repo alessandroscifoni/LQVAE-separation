@@ -140,3 +140,5 @@ script/checkpoints
 babyslakh_16k/
 *.gz
 *.dur
+
+*Zone.Identifier*
